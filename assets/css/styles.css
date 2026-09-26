@@ -393,6 +393,7 @@ p { margin: 0; }
 @media (max-width: 560px) { .values { grid-template-columns: 1fr; } }
 
 /* ---------- Faixa CTA ---------- */
+.cta { padding-block: 0 clamp(64px, 10vw, 112px); }
 .band { background: var(--band); color: var(--on-band); border-radius: var(--radius-lg); position: relative; overflow: hidden; padding: clamp(40px, 7vw, 72px); }
 .band .display-l { max-width: 640px; }
 /* Branco sobre azul Doo só a 24px ou mais */
@@ -400,55 +401,6 @@ p { margin: 0; }
 .band .hero-actions { margin-top: var(--space-8); }
 .band .ring { --c: rgba(255, 255, 255, .22); }
 .band > *:not(.ring) { position: relative; z-index: 1; }
-
-/* ---------- Contacto ---------- */
-.contact { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--space-12); align-items: start; }
-.contact-list { list-style: none; margin: var(--space-8) 0 0; padding: 0; display: grid; gap: var(--space-4); }
-.contact-list li { display: grid; gap: 2px; }
-.contact-list .eyebrow { font-size: 12px; }
-.contact-list a { font-weight: 600; font-size: 17px; }
-.social-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
-
-.form {
-  display: grid; gap: var(--space-4); padding: var(--space-8);
-  background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);
-}
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
-.field { display: grid; gap: var(--space-2); }
-.field label, .field legend { font-size: 14px; line-height: 20px; font-weight: 600; }
-.field input, .field textarea, .field select {
-  width: 100%; font: 400 15px/24px var(--font-sans); color: var(--ink);
-  background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
-  padding: var(--space-3) var(--space-4); min-height: 44px;
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-.field input:hover, .field textarea:hover { border-color: var(--ink-muted); }
-.field textarea { resize: vertical; min-height: 120px; }
-.field input:focus, .field textarea:focus { outline: none; border-color: var(--action); box-shadow: 0 0 0 4px var(--action-soft); }
-.field [aria-invalid="true"] { border-color: var(--danger); }
-.field-error { color: var(--danger); font-size: 13px; line-height: 20px; font-weight: 600; display: none; }
-.field-error.is-visible { display: block; }
-fieldset.field { border: 0; padding: 0; margin: 0; }
-.choice-group { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.choice { position: relative; }
-.field .choice input { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; opacity: 0; pointer-events: none; }
-.choice span {
-  display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer;
-  padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
-  border: 1px solid var(--line-strong); font-size: 13px; line-height: 20px; font-weight: 600;
-  transition: background-color .2s ease, border-color .2s ease, transform .2s var(--ease-out);
-}
-.choice span:hover { border-color: var(--ink); }
-.choice span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--_dot); transition: transform .35s var(--ease-spring); }
-.choice input:checked + span::before { transform: scale(1.5); }
-.choice input:active + span, .choice span:active { transform: scale(.96); }
-.choice input:checked + span { background: var(--_soft); border-color: var(--ink); }
-.choice input:focus-visible + span { outline: 3px solid var(--action); outline-offset: 2px; }
-.form-status { font-size: 14px; line-height: 20px; font-weight: 600; min-height: 20px; }
-.form-status.is-success { color: var(--success); animation: rise .5s var(--ease-out); }
-.form-status.is-error { color: var(--danger); animation: rise .5s var(--ease-out); }
-@media (max-width: 880px) { .contact { grid-template-columns: 1fr; } }
-@media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } .form { padding: var(--space-6); } }
 
 /* ---------- Rodapé ---------- */
 .site-footer { border-top: 1px solid var(--line); background: var(--surface); color: var(--ink); padding-block: var(--space-16) var(--space-8); }

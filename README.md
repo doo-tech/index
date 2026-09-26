@@ -8,10 +8,10 @@ mascote e regras de contraste.
 ## Estrutura
 
 ```
-index.html              Página principal (hero, frentes, porquê a Doo, método, sobre, CTA, contacto)
+index.html              Página principal (topo, serviços, porquê a Doo, método, sobre, contacto)
 404.html                Página de erro com a mascote
 assets/css/styles.css   Tokens da marca e estilos
-assets/js/main.js       Menu móvel, animações e formulário
+assets/js/main.js       Menu móvel e animações
 assets/img/             Logótipo e isotipo (SVG extraídos do manual) e mascote
 ```
 
@@ -39,7 +39,4 @@ A `404.html` calcula a raiz do site sozinha, por isso funciona tanto em
 
 - **Contraste:** `#3399F3` nunca é usado em texto pequeno; links e botões usam `action` (`#1C6FC4`);
   branco sobre azul só a 24px ou mais.
-- **Contacto:** o formulário valida os campos e abre o cliente de email (`mailto:`).
-  O endereço `ola@doo.ao` é **provisório** e deve ser substituído pelo real
-  (em `index.html`, `404.html` e no atributo `data-mailto` do formulário), ou ligar o formulário
-  a um serviço como Formspree/Netlify Forms.
+- **Contacto:** os botões de contacto abrem um email para `ola@doo.ao`.

@@ -228,7 +228,8 @@
     var drawScenes = function () {
       sceneTicking = false;
       var vh = window.innerHeight;
-      scenes.forEach(function (scene) {
+      scenes.forEach(function (scene, i) {
+        if (i === scenes.length - 1) return; // a última cena não tem para onde sair
         var r = scene.getBoundingClientRect();
         var inner = scene.firstElementChild;
         if (!inner || r.bottom < -vh || r.top > vh * 2) return;
@@ -289,67 +290,6 @@
       bubble.style.top = (e.clientY - box.top - size / 2) + 'px';
       btn.appendChild(bubble);
       bubble.addEventListener('animationend', function () { bubble.remove(); });
-    });
-  }
-
-  /* ---------- "Saber mais" pré-seleciona a frente no formulário ---------- */
-  document.querySelectorAll('[data-front]').forEach(function (a) {
-    a.addEventListener('click', function () {
-      var box = document.querySelector('.choice input[data-key="' + a.dataset.front + '"]');
-      if (box) box.checked = true;
-    });
-  });
-
-  /* ---------- Formulário de contacto ---------- */
-  var form = document.getElementById('contact-form');
-  if (form) {
-    var status = form.querySelector('.form-status');
-    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    function check(input) {
-      var ok = input.type === 'email' ? emailRe.test(input.value.trim()) : input.value.trim().length > 0;
-      var err = document.getElementById(input.getAttribute('aria-describedby'));
-      input.setAttribute('aria-invalid', String(!ok));
-      if (err) err.classList.toggle('is-visible', !ok);
-      return ok;
-    }
-
-    form.querySelectorAll('[required]').forEach(function (input) {
-      input.addEventListener('blur', function () { if (input.value) check(input); });
-      input.addEventListener('input', function () {
-        if (input.getAttribute('aria-invalid') === 'true') check(input);
-      });
-    });
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var required = Array.prototype.slice.call(form.querySelectorAll('[required]'));
-      var invalid = required.filter(function (input) { return !check(input); });
-      if (invalid.length) {
-        status.className = 'form-status is-error';
-        status.textContent = 'Reveja os campos assinalados.';
-        invalid[0].focus();
-        return;
-      }
-
-      var data = new FormData(form);
-      var fronts = data.getAll('frente');
-      var body = [
-        'Nome: ' + data.get('nome'),
-        'Email: ' + data.get('email'),
-        data.get('empresa') ? 'Empresa: ' + data.get('empresa') : '',
-        fronts.length ? 'Frentes: ' + fronts.join(', ') : '',
-        '',
-        data.get('mensagem')
-      ].filter(function (l, i) { return l !== '' || i === 4; }).join('\n');
-
-      var subject = 'Novo projeto' + (data.get('empresa') ? ' · ' + data.get('empresa') : '');
-      window.location.href = 'mailto:' + form.dataset.mailto +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(body);
-
-      status.className = 'form-status is-success';
-      status.textContent = 'Obrigado! Abrimos o seu email para concluir o envio.';
     });
   }
 
