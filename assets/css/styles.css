@@ -42,9 +42,9 @@
 /* ---------- Tema Creme (padrão) ---------- */
 :root,
 :root[data-theme="light"] {
-  --surface: #FDFEF0;
+  --surface: #FFFFFF;
   --surface-raised: #FFFFFF;
-  --surface-sunken: #F3F5E4;
+  --surface-sunken: #FDFEF0;
   --line: #DEE2CF;
   --line-strong: #8A94A0;
   --ink: #37485B;
@@ -63,29 +63,7 @@
   color-scheme: light;
 }
 
-/* ---------- Tema Oliva (escuro) ---------- */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --surface: #353C1D;
-    --surface-raised: #434B27;
-    --surface-sunken: #2C3217;
-    --line: #58613A;
-    --line-strong: #9AA27A;
-    --ink: #FDFEF0;
-    --ink-muted: #C9CEB4;
-    --action: #99CCF9;
-    --on-action: #353C1D;
-    --action-soft: #2C4760;
-    --teal-soft: #1F4A4C;
-    --green-soft: #2F4A26;
-    --sunny-soft: #5A5222;
-    --success: #74CB7F;
-    --danger: #F4A06B;
-    --band: #2C3217;
-    --on-band: #FDFEF0;
-    color-scheme: dark;
-  }
-}
+/* ---------- Tema Oliva (escuro, só pelo botão de tema) ---------- */
 :root[data-theme="dark"] {
   --surface: #353C1D;
   --surface-raised: #434B27;
@@ -178,9 +156,6 @@ p { margin: 0; }
 .btn--link:hover { box-shadow: none; text-decoration: underline; }
 .btn--on-band { --_bg: var(--on-band); --_fg: var(--doo-navy); --_bd: var(--on-band); }
 :root[data-theme="dark"] .btn--on-band { --_bg: var(--action); --_fg: var(--on-action); --_bd: var(--action); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .btn--on-band { --_bg: var(--action); --_fg: var(--on-action); --_bd: var(--action); }
-}
 
 /* ---------- Chips ---------- */
 .chip {
@@ -195,7 +170,6 @@ p { margin: 0; }
 .tone-green { --_soft: var(--green-soft);  --_dot: var(--doo-green); }
 .tone-sunny { --_soft: var(--sunny-soft);  --_dot: var(--doo-navy); }
 :root[data-theme="dark"] .tone-sunny { --_dot: var(--doo-sunny); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tone-sunny { --_dot: var(--doo-sunny); } }
 
 /* ---------- Header ---------- */
 .site-header {
@@ -215,7 +189,6 @@ p { margin: 0; }
   background: var(--logo) center / contain no-repeat;
 }
 :root[data-theme="dark"] .brand-logo { background-image: url("../img/doo-logo-dark.svg"); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .brand-logo { background-image: url("../img/doo-logo-dark.svg"); } }
 
 .nav { display: flex; align-items: center; gap: var(--space-1); }
 .nav a {
@@ -235,10 +208,6 @@ p { margin: 0; }
 .theme-toggle .i-sun { display: none; }
 :root[data-theme="dark"] .theme-toggle .i-sun { display: block; }
 :root[data-theme="dark"] .theme-toggle .i-moon { display: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-toggle .i-sun { display: block; }
-  :root:not([data-theme="light"]) .theme-toggle .i-moon { display: none; }
-}
 .menu-toggle { display: none; }
 
 @media (max-width: 880px) {
@@ -278,7 +247,6 @@ p { margin: 0; }
   aspect-ratio: 158 / 85; background: var(--logo) center / contain no-repeat;
 }
 :root[data-theme="dark"] .hero-art .logo-main { background-image: url("../img/doo-logo-dark.svg"); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero-art .logo-main { background-image: url("../img/doo-logo-dark.svg"); } }
 .hero-art .signature {
   position: absolute; right: 12%; top: 73%;
   font-weight: 500; font-size: clamp(16px, 2vw, 22px); letter-spacing: .04em; color: var(--ink);
