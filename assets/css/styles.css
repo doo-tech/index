@@ -352,11 +352,15 @@ p { margin: 0; }
 
 /* ---------- Mascote / sobre ---------- */
 .about { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--space-12); align-items: center; }
-.mascot-card {
-  position: relative; border-radius: var(--radius-lg); overflow: hidden;
-  background: var(--doo-sunny); aspect-ratio: 623 / 520;
+/* Mascote sem fundo: as bordas onde o desenho foi cortado desvanecem-se */
+.mascot-card { position: relative; aspect-ratio: 623 / 520; max-width: 100%; }
+.mascot-card img {
+  width: 100%; height: 100%; object-fit: contain;
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 22%), linear-gradient(to right, transparent 0, #000 14%, #000 90%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to top, transparent 0, #000 22%), linear-gradient(to right, transparent 0, #000 14%, #000 90%, transparent 100%);
+  mask-composite: intersect;
 }
-.mascot-card img { width: 100%; height: 100%; object-fit: cover; }
 .mascot-card .ring { z-index: 1; }
 .about-copy { display: grid; gap: var(--space-6); }
 .about-copy .body-l { color: var(--ink-muted); }
