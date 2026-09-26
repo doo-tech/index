@@ -1,19 +1,6 @@
 (function () {
   'use strict';
 
-  var root = document.documentElement;
-
-  /* ---------- Tema (creme / oliva) ---------- */
-  var themeBtn = document.querySelector('.theme-toggle');
-  if (themeBtn) {
-    themeBtn.addEventListener('click', function () {
-      var current = root.dataset.theme || 'light';
-      var next = current === 'dark' ? 'light' : 'dark';
-      root.dataset.theme = next;
-      try { localStorage.setItem('doo-theme', next); } catch (e) {}
-    });
-  }
-
   /* ---------- Header: borda ao fazer scroll ---------- */
   var header = document.querySelector('.site-header');
   var onScroll = function () { header && header.classList.toggle('is-scrolled', window.scrollY > 8); };
