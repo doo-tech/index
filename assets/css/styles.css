@@ -322,7 +322,7 @@ p { margin: 0; }
 @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
 
 /* ---------- Mascote / sobre ---------- */
-.about { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--space-12); align-items: center; }
+.about { display: grid; grid-template-columns: 1.1fr .9fr; gap: var(--space-12); align-items: center; }
 /* Mascote sem fundo: as bordas onde o desenho foi cortado desvanecem-se */
 .mascot-card { position: relative; aspect-ratio: 623 / 520; max-width: 100%; }
 .mascot-card img {
