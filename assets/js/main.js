@@ -45,7 +45,8 @@
 
   /* ---------- Bolhas de sabão ----------
      Cada contentor [data-bubbles] solta bolhas a partir de data-origin ("x y" em %).
-     data-size (px), data-spread e data-rise (frações do contentor) são intervalos "mín máx".
+     data-size (px), data-spread e data-rise (frações do contentor) são intervalos "mín máx";
+     data-fill preenche as bolhas com a cor do traço.
      As bolhas enchem, sobem com um balanço lateral, deformam-se ligeiramente
      e acabam por desvanecer ou rebentar. */
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -64,6 +65,7 @@
     this.spread = nums(el.dataset.spread, [-0.35, 0.4]);
     this.rise = nums(el.dataset.rise, [0.3, 0.7]);
     this.colors = (el.dataset.palette || 'blue').split(/\s+/).map(function (c) { return 'var(--doo-' + c + ')'; });
+    this.fill = 'fill' in el.dataset; // bolhas cheias em vez de anéis
     this.alive = [];
     this.running = false;
     this.timer = null;
@@ -79,6 +81,7 @@
     b.style.width = b.style.height = d + 'px';
     b.style.borderWidth = (d / 4) + 'px';
     b.style.setProperty('--c', this.colors[Math.floor(Math.random() * this.colors.length)]);
+    if (this.fill) b.style.background = 'var(--c)';
     this.el.appendChild(b);
 
     var ox = box.width * (this.origin[0] + rand(-2, 2)) / 100 - d / 2;
