@@ -205,13 +205,21 @@ p { margin: 0; }
 .section-head .body-l { color: var(--ink-muted); }
 
 /* ---------- Hero ---------- */
-.hero { padding-block: clamp(40px, 8vw, 96px) clamp(64px, 10vw, 120px); overflow: hidden; }
+/* O topo ocupa o ecrã visível (menos o cabeçalho) e cabe sem scroll */
+.hero {
+  min-height: calc(100vh - 72px); min-height: calc(100svh - 72px);
+  display: flex; align-items: center;
+  padding-block: clamp(24px, 6vh, 72px); overflow: hidden;
+}
+.hero .container { width: 100%; }
+.hero .display-xl { font-size: clamp(32px, min(5.4vw, 8.2vh), 64px); }
+.hero-copy .body-l { font-size: clamp(15px, 2.2vh, 17px); line-height: 1.6; }
 .hero .container { display: grid; grid-template-columns: 1.05fr .95fr; gap: var(--space-12); align-items: center; }
-.hero-copy { display: grid; gap: var(--space-6); position: relative; z-index: 1; }
+.hero-copy { display: grid; gap: clamp(12px, 3vh, 24px); position: relative; z-index: 1; }
 .hero-copy .body-l { max-width: 520px; color: var(--ink-muted); }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
-.hero-art { position: relative; aspect-ratio: 1 / 1; max-width: 520px; width: 100%; justify-self: end; }
+.hero-art { position: relative; aspect-ratio: 1 / 1; max-width: min(520px, 62vh); width: 100%; justify-self: end; }
 .hero-art .isotipo {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   height: 68%; width: auto; max-width: none;
@@ -234,7 +242,11 @@ p { margin: 0; }
 
 @media (max-width: 880px) {
   .hero .container { grid-template-columns: 1fr; }
-  .hero-art { order: -1; max-width: 320px; justify-self: center; margin-bottom: calc(var(--space-8) * -1); }
+  .hero .container { gap: clamp(8px, 2vh, 24px); }
+  .hero-art { order: -1; max-width: min(200px, 21svh); justify-self: start; }
+  .hero .hero-actions { flex-wrap: nowrap; }
+  .hero .hero-actions .btn { flex: 1 1 auto; padding-inline: var(--space-4); }
+  .hero-art .isotipo { height: 88%; }
 }
 
 /* ---------- Frentes (serviços) ---------- */
@@ -265,49 +277,33 @@ p { margin: 0; }
 @media (max-width: 600px)  { .fronts { grid-template-columns: 1fr; } }
 
 /* ---------- Manifesto / numa só casa ---------- */
-.house { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center; }
-.house-points { display: grid; gap: var(--space-6); margin-top: var(--space-8); }
-.house-point { display: grid; grid-template-columns: 24px 1fr; gap: var(--space-4); align-items: start; }
-.house-mark { width: 20px; height: 20px; margin-top: 3px; border-radius: 50%; border: 5px solid var(--_dot); }
-.house-point p { color: var(--ink-muted); margin-top: var(--space-1); }
-.house-visual {
-  position: relative; border-radius: var(--radius-lg); background: var(--surface-raised);
-  border: 1px solid var(--line); padding: var(--space-8); aspect-ratio: 5 / 4;
-  display: grid; place-items: center; overflow: hidden;
+.why-head {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8) var(--space-12); align-items: end;
+  margin-bottom: var(--space-12);
 }
-.orbit { position: relative; width: min(100%, 380px); aspect-ratio: 1; }
-.orbit .core {
-  position: absolute; inset: 33%; display: grid; place-items: center;
-  border-radius: 50%; background: var(--doo-blue);
+.why-head > div { display: grid; gap: var(--space-4); }
+.why-head .body-l { color: var(--ink-muted); max-width: 520px; }
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+.why-item { display: grid; gap: var(--space-3); align-content: start; padding-top: var(--space-6); border-top: 3px solid var(--_dot); }
+.why-item p { color: var(--ink-muted); }
+@media (max-width: 880px) {
+  .why-head { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; gap: var(--space-6); }
 }
-.orbit .core img { width: 42%; }
-.orbit .sat {
-  position: absolute; width: 34%; aspect-ratio: 1; border-radius: 50%;
-  display: grid; place-items: center; text-align: center; padding: var(--space-2);
-  background: var(--_soft); font-size: 13px; line-height: 16px; font-weight: 700; color: var(--ink);
-  border: 6px solid var(--surface-raised);
-}
-.orbit .sat:nth-of-type(1) { top: 0; left: 33%; }
-.orbit .sat:nth-of-type(2) { top: 33%; right: 0; }
-.orbit .sat:nth-of-type(3) { bottom: 0; left: 33%; }
-.orbit .sat:nth-of-type(4) { top: 33%; left: 0; }
-.orbit svg.links { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-strong); }
-@media (max-width: 880px) { .house { grid-template-columns: 1fr; } }
 
 /* ---------- Como trabalhamos ---------- */
-.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); counter-reset: step; list-style: none; margin: 0; padding: 0; position: relative; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); list-style: none; margin: 0; padding: 0; position: relative; }
 .steps::before {
-  content: ""; position: absolute; left: 28px; right: 28px; top: 28px; height: 0;
+  content: ""; position: absolute; left: 28px; right: calc((100% - 3 * var(--space-6)) / 4 - 28px); top: 28px; height: 0;
   border-top: 2px dashed var(--line-strong); opacity: .6;
 }
 .step { position: relative; display: grid; gap: var(--space-3); align-content: start; }
 .step-num {
-  counter-increment: step; width: 56px; height: 56px; border-radius: 50%;
+  width: 56px; height: 56px; border-radius: 50%;
   display: grid; place-items: center; background: var(--surface);
   border: 14px solid var(--_dot); position: relative;
 }
 .section--sunken .step-num { background: var(--surface-sunken); }
-.step-num::after { content: counter(step); position: absolute; left: 72px; font: 700 36px/40px var(--font-round); color: var(--ink); opacity: .18; }
 .step p { color: var(--ink-muted); }
 @media (max-width: 880px) {
   .steps { grid-template-columns: 1fr 1fr; row-gap: var(--space-12); }
@@ -354,6 +350,7 @@ p { margin: 0; }
 .contact-list li { display: grid; gap: 2px; }
 .contact-list .eyebrow { font-size: 12px; }
 .contact-list a { font-weight: 600; font-size: 17px; }
+.social-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
 
 .form {
   display: grid; gap: var(--space-4); padding: var(--space-8);
