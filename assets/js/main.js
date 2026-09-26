@@ -7,8 +7,7 @@
   var themeBtn = document.querySelector('.theme-toggle');
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
-      var current = root.dataset.theme ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      var current = root.dataset.theme || 'light';
       var next = current === 'dark' ? 'light' : 'dark';
       root.dataset.theme = next;
       try { localStorage.setItem('doo-theme', next); } catch (e) {}

@@ -22,8 +22,18 @@ python3 -m http.server 8000
 # abrir http://localhost:8000
 ```
 
-Pode ser publicado em qualquer alojamento estático (GitHub Pages, Netlify, Vercel…).
-A `404.html` usa caminhos absolutos (`/assets/...`), pensados para o site servido na raiz do domínio.
+## Publicação (GitHub Pages)
+
+O workflow `.github/workflows/pages.yml` publica o site a cada push para `main`
+(e pode ser corrido à mão em *Actions → Deploy GitHub Pages → Run workflow*).
+
+Configuração única no GitHub:
+
+1. *Settings → Pages → Build and deployment → Source*: **GitHub Actions**.
+2. Endereço: `https://doo-tech.github.io/index/`.
+
+A `404.html` calcula a raiz do site sozinha, por isso funciona tanto em
+`doo-tech.github.io/index/` como num domínio próprio.
 
 ## Notas
 
