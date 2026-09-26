@@ -1,10 +1,16 @@
 (function () {
   'use strict';
 
-  /* ---------- Header: borda ao fazer scroll ---------- */
+  /* ---------- Header: borda e progresso de leitura ---------- */
   var header = document.querySelector('.site-header');
-  var onScroll = function () { header && header.classList.toggle('is-scrolled', window.scrollY > 8); };
+  var onScroll = function () {
+    if (!header) return;
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    header.style.setProperty('--progress', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : 0);
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
   onScroll();
 
   /* ---------- Menu móvel ---------- */
@@ -166,20 +172,66 @@
     });
   }
 
-  /* ---------- Revelar ao fazer scroll ---------- */
-  var reveals = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
+  /* ---------- Revelar ao fazer scroll ----------
+     Os filhos .reveal de um [data-stagger] entram em sequência (atraso em ms por item).
+     .steps desenha a linha quando fica visível. */
+  document.querySelectorAll('[data-stagger]').forEach(function (group) {
+    var step = Number(group.dataset.stagger) || 90;
+    group.querySelectorAll('.reveal').forEach(function (el, i) { el.style.setProperty('--delay', (i * step) + 'ms'); });
+  });
+
+  var reveals = document.querySelectorAll('.reveal, .steps');
+  var show = function (el) { el.classList.add(el.classList.contains('steps') ? 'is-drawn' : 'is-visible'); };
+  if ('IntersectionObserver' in window && !reduceMotion) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
+          show(entry.target);
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     reveals.forEach(function (el) { io.observe(el); });
   } else {
-    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+    reveals.forEach(show);
+  }
+
+  /* ---------- Paralaxe suave ([data-parallax] = velocidade relativa ao scroll) ---------- */
+  var parallax = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+  if (parallax.length && !reduceMotion) {
+    var ticking = false;
+    var moveParallax = function () {
+      ticking = false;
+      var mid = window.innerHeight / 2;
+      parallax.forEach(function (el) {
+        var box = el.parentElement.getBoundingClientRect();
+        if (box.bottom < -200 || box.top > window.innerHeight + 200) return;
+        var offset = (box.top + box.height / 2 - mid) * Number(el.dataset.parallax);
+        el.style.translate = '0 ' + (-offset).toFixed(1) + 'px';
+      });
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(moveParallax); }
+    }, { passive: true });
+    window.addEventListener('resize', moveParallax);
+    moveParallax();
+  }
+
+  /* ---------- Botões: bolha a partir do ponto de clique ---------- */
+  if (!reduceMotion) {
+    document.addEventListener('pointerdown', function (e) {
+      var btn = e.target.closest && e.target.closest('.btn');
+      if (!btn) return;
+      var box = btn.getBoundingClientRect();
+      var size = Math.max(box.width, box.height) * 2.2;
+      var bubble = document.createElement('span');
+      bubble.className = 'btn-bubble';
+      bubble.style.width = bubble.style.height = size + 'px';
+      bubble.style.left = (e.clientX - box.left - size / 2) + 'px';
+      bubble.style.top = (e.clientY - box.top - size / 2) + 'px';
+      btn.appendChild(bubble);
+      bubble.addEventListener('animationend', function () { bubble.remove(); });
+    });
   }
 
   /* ---------- "Saber mais" pré-seleciona a frente no formulário ---------- */
