@@ -172,12 +172,7 @@ p { margin: 0; }
   transition: border-color .2s, box-shadow .3s;
 }
 .site-header.is-scrolled { border-bottom-color: var(--line); box-shadow: 0 8px 24px -20px rgba(55, 72, 91, .4); }
-/* Progresso de leitura */
-.scroll-progress {
-  position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; pointer-events: none;
-  background: linear-gradient(90deg, var(--doo-blue), var(--doo-teal));
-  transform-origin: left; transform: scaleX(var(--progress, 0));
-}
+
 .site-header .container { display: flex; align-items: center; gap: var(--space-6); min-height: 72px; }
 
 .brand { display: inline-flex; align-items: center; text-decoration: none; margin-right: auto; }
@@ -246,14 +241,12 @@ p { margin: 0; }
 .hero-art .isotipo {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   height: 68%; width: auto; max-width: none;
-  animation: inflate 1.2s var(--ease-spring) .2s both;
 }
 .hero-copy > * { animation: rise .9s var(--ease-out) both; }
 .hero-copy > :nth-child(2) { animation-delay: .08s; }
 .hero-copy > :nth-child(3) { animation-delay: .16s; }
 .hero-copy > :nth-child(4) { animation-delay: .24s; }
 @keyframes rise { from { opacity: 0; translate: 0 20px; } }
-@keyframes inflate { from { opacity: 0; scale: .6; } }
 
 /* Motivo: anéis-bolha — traço ≈ ¼ do diâmetro */
 .ring {
@@ -481,6 +474,18 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
               transform .35s var(--ease-out), border-color .25s ease, box-shadow .35s var(--ease-out);
 }
 .reveal.is-visible, .no-js .reveal { opacity: 1; translate: none; }
+
+/* ---------- Cenas: cada secção anima ao entrar e cede o lugar à seguinte ---------- */
+/* Títulos palavra a palavra, a subir por detrás de uma máscara */
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.split .w > span {
+  display: inline-block; translate: 0 105%;
+  transition: translate .95s var(--ease-out) calc(var(--delay, 0s) + var(--wi, 0) * 45ms);
+}
+.is-visible .split .w > span, .split.is-visible .w > span { translate: none; }
+/* Secções creme: começam como um cartão arredondado e abrem até à largura total */
+.scene-js .section--sunken { clip-path: inset(0 var(--inset, 0px) round var(--round, 0px)); }
+.scene-js .band { scale: var(--grow, 1); }
 
 /* ---------- 404 ---------- */
 .notfound { min-height: calc(100vh - 72px); display: grid; align-items: center; padding-block: var(--space-12); }
