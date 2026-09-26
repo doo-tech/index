@@ -1,16 +1,10 @@
 (function () {
   'use strict';
 
-  /* ---------- Header: borda e progresso de leitura ---------- */
+  /* ---------- Header: borda ao fazer scroll ---------- */
   var header = document.querySelector('.site-header');
-  var onScroll = function () {
-    if (!header) return;
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    header.style.setProperty('--progress', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : 0);
-  };
+  var onScroll = function () { header && header.classList.toggle('is-scrolled', window.scrollY > 8); };
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll);
   onScroll();
 
   /* ---------- Menu móvel ---------- */
@@ -172,28 +166,93 @@
     });
   }
 
-  /* ---------- Revelar ao fazer scroll ----------
-     Os filhos .reveal de um [data-stagger] entram em sequência (atraso em ms por item).
-     .steps desenha a linha quando fica visível. */
-  document.querySelectorAll('[data-stagger]').forEach(function (group) {
-    var step = Number(group.dataset.stagger) || 90;
-    group.querySelectorAll('.reveal').forEach(function (el, i) { el.style.setProperty('--delay', (i * step) + 'ms'); });
-  });
+  /* ---------- Cenas ----------
+     Cada secção do <main> é uma cena. A passagem de uma secção para a seguinte é o gatilho:
+     - ao entrar, os elementos .reveal da cena animam em sequência (títulos palavra a palavra);
+     - ao sair, a cena sobe e esbate-se ligeiramente, ligada ao scroll;
+     - as secções creme abrem de cartão arredondado para a largura total e a faixa azul cresce. */
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+  var clamp = function (v) { return Math.max(0, Math.min(1, v)); };
+  var easeOut = function (t) { return 1 - Math.pow(1 - t, 3); };
+  var escapeHtml = function (t) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
 
-  var reveals = document.querySelectorAll('.reveal, .steps');
+  if (!reduceMotion) {
+    document.querySelectorAll('main h2.display-l').forEach(function (h) {
+      var text = h.textContent.trim().replace(/\s+/g, ' ');
+      h.setAttribute('aria-label', text);
+      h.classList.add('split');
+      h.innerHTML = text.split(' ').map(function (word, i) {
+        return '<span class="w" aria-hidden="true"><span style="--wi:' + i + '">' + escapeHtml(word) + '</span></span>';
+      }).join(' ');
+    });
+  }
+
   var show = function (el) { el.classList.add(el.classList.contains('steps') ? 'is-drawn' : 'is-visible'); };
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    var io = new IntersectionObserver(function (entries) {
+  var canObserve = 'IntersectionObserver' in window && !reduceMotion;
+  // Elementos longe do ecrã quando a cena começa entram sozinhos, quando lá chegarem
+  var lateObserver = canObserve && new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) { entry.target.style.setProperty('--delay', '0ms'); show(entry.target); lateObserver.unobserve(entry.target); }
+    });
+  }, { rootMargin: '0px 0px -10% 0px' });
+
+  var playScene = function (scene) {
+    var limit = window.innerHeight * 1.05;
+    var i = 0;
+    scene.querySelectorAll('.reveal, .steps').forEach(function (el) {
+      if (el.getBoundingClientRect().top < limit) {
+        el.style.setProperty('--delay', (Math.min(i++, 7) * 110) + 'ms');
+        show(el);
+      } else {
+        lateObserver.observe(el);
+      }
+    });
+  };
+
+  if (canObserve) {
+    var sceneObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          show(entry.target);
-          io.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) { playScene(entry.target); sceneObserver.unobserve(entry.target); }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-    reveals.forEach(function (el) { io.observe(el); });
+    }, { rootMargin: '0px 0px -22% 0px' });
+    scenes.forEach(function (scene) { sceneObserver.observe(scene); });
   } else {
-    reveals.forEach(show);
+    document.querySelectorAll('.reveal, .steps').forEach(show);
+  }
+
+  if (!reduceMotion) {
+    document.documentElement.classList.add('scene-js');
+    var sunken = scenes.filter(function (s) { return s.classList.contains('section--sunken'); });
+    var band = document.querySelector('.band');
+    var sceneTicking = false;
+    var drawScenes = function () {
+      sceneTicking = false;
+      var vh = window.innerHeight;
+      scenes.forEach(function (scene, i) {
+        if (i === scenes.length - 1) return; // a última cena não tem para onde sair
+        var r = scene.getBoundingClientRect();
+        var inner = scene.firstElementChild;
+        if (!inner || r.bottom < -vh || r.top > vh * 2) return;
+        var out = clamp((vh * 0.55 - r.bottom) / (vh * 0.55));
+        inner.style.opacity = out ? (1 - out * 0.55).toFixed(3) : '';
+        inner.style.translate = out ? '0 ' + (-out * 56).toFixed(1) + 'px' : '';
+      });
+      var maxInset = Math.min(48, window.innerWidth * 0.04);
+      sunken.forEach(function (s) {
+        var open = easeOut(clamp((vh - s.getBoundingClientRect().top) / (vh * 0.6)));
+        s.style.setProperty('--inset', ((1 - open) * maxInset).toFixed(1) + 'px');
+        s.style.setProperty('--round', ((1 - open) * 40).toFixed(1) + 'px');
+      });
+      if (band) {
+        var grow = easeOut(clamp((vh - band.getBoundingClientRect().top) / (vh * 0.7)));
+        band.style.setProperty('--grow', (0.92 + 0.08 * grow).toFixed(4));
+      }
+    };
+    window.addEventListener('scroll', function () {
+      if (!sceneTicking) { sceneTicking = true; requestAnimationFrame(drawScenes); }
+    }, { passive: true });
+    window.addEventListener('resize', drawScenes);
+    drawScenes();
   }
 
   /* ---------- Paralaxe suave ([data-parallax] = velocidade relativa ao scroll) ---------- */
@@ -231,67 +290,6 @@
       bubble.style.top = (e.clientY - box.top - size / 2) + 'px';
       btn.appendChild(bubble);
       bubble.addEventListener('animationend', function () { bubble.remove(); });
-    });
-  }
-
-  /* ---------- "Saber mais" pré-seleciona a frente no formulário ---------- */
-  document.querySelectorAll('[data-front]').forEach(function (a) {
-    a.addEventListener('click', function () {
-      var box = document.querySelector('.choice input[data-key="' + a.dataset.front + '"]');
-      if (box) box.checked = true;
-    });
-  });
-
-  /* ---------- Formulário de contacto ---------- */
-  var form = document.getElementById('contact-form');
-  if (form) {
-    var status = form.querySelector('.form-status');
-    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    function check(input) {
-      var ok = input.type === 'email' ? emailRe.test(input.value.trim()) : input.value.trim().length > 0;
-      var err = document.getElementById(input.getAttribute('aria-describedby'));
-      input.setAttribute('aria-invalid', String(!ok));
-      if (err) err.classList.toggle('is-visible', !ok);
-      return ok;
-    }
-
-    form.querySelectorAll('[required]').forEach(function (input) {
-      input.addEventListener('blur', function () { if (input.value) check(input); });
-      input.addEventListener('input', function () {
-        if (input.getAttribute('aria-invalid') === 'true') check(input);
-      });
-    });
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var required = Array.prototype.slice.call(form.querySelectorAll('[required]'));
-      var invalid = required.filter(function (input) { return !check(input); });
-      if (invalid.length) {
-        status.className = 'form-status is-error';
-        status.textContent = 'Reveja os campos assinalados.';
-        invalid[0].focus();
-        return;
-      }
-
-      var data = new FormData(form);
-      var fronts = data.getAll('frente');
-      var body = [
-        'Nome: ' + data.get('nome'),
-        'Email: ' + data.get('email'),
-        data.get('empresa') ? 'Empresa: ' + data.get('empresa') : '',
-        fronts.length ? 'Frentes: ' + fronts.join(', ') : '',
-        '',
-        data.get('mensagem')
-      ].filter(function (l, i) { return l !== '' || i === 4; }).join('\n');
-
-      var subject = 'Novo projeto' + (data.get('empresa') ? ' · ' + data.get('empresa') : '');
-      window.location.href = 'mailto:' + form.dataset.mailto +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(body);
-
-      status.className = 'form-status is-success';
-      status.textContent = 'Obrigado! Abrimos o seu email para concluir o envio.';
     });
   }
 

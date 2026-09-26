@@ -172,12 +172,7 @@ p { margin: 0; }
   transition: border-color .2s, box-shadow .3s;
 }
 .site-header.is-scrolled { border-bottom-color: var(--line); box-shadow: 0 8px 24px -20px rgba(55, 72, 91, .4); }
-/* Progresso de leitura */
-.scroll-progress {
-  position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; pointer-events: none;
-  background: linear-gradient(90deg, var(--doo-blue), var(--doo-teal));
-  transform-origin: left; transform: scaleX(var(--progress, 0));
-}
+
 .site-header .container { display: flex; align-items: center; gap: var(--space-6); min-height: 72px; }
 
 .brand { display: inline-flex; align-items: center; text-decoration: none; margin-right: auto; }
@@ -246,14 +241,12 @@ p { margin: 0; }
 .hero-art .isotipo {
   position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
   height: 68%; width: auto; max-width: none;
-  animation: inflate 1.2s var(--ease-spring) .2s both;
 }
 .hero-copy > * { animation: rise .9s var(--ease-out) both; }
 .hero-copy > :nth-child(2) { animation-delay: .08s; }
 .hero-copy > :nth-child(3) { animation-delay: .16s; }
 .hero-copy > :nth-child(4) { animation-delay: .24s; }
 @keyframes rise { from { opacity: 0; translate: 0 20px; } }
-@keyframes inflate { from { opacity: 0; scale: .6; } }
 
 /* Motivo: anéis-bolha — traço ≈ ¼ do diâmetro */
 .ring {
@@ -400,6 +393,7 @@ p { margin: 0; }
 @media (max-width: 560px) { .values { grid-template-columns: 1fr; } }
 
 /* ---------- Faixa CTA ---------- */
+.cta { padding-block: 0 clamp(64px, 10vw, 112px); }
 .band { background: var(--band); color: var(--on-band); border-radius: var(--radius-lg); position: relative; overflow: hidden; padding: clamp(40px, 7vw, 72px); }
 .band .display-l { max-width: 640px; }
 /* Branco sobre azul Doo só a 24px ou mais */
@@ -407,55 +401,6 @@ p { margin: 0; }
 .band .hero-actions { margin-top: var(--space-8); }
 .band .ring { --c: rgba(255, 255, 255, .22); }
 .band > *:not(.ring) { position: relative; z-index: 1; }
-
-/* ---------- Contacto ---------- */
-.contact { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--space-12); align-items: start; }
-.contact-list { list-style: none; margin: var(--space-8) 0 0; padding: 0; display: grid; gap: var(--space-4); }
-.contact-list li { display: grid; gap: 2px; }
-.contact-list .eyebrow { font-size: 12px; }
-.contact-list a { font-weight: 600; font-size: 17px; }
-.social-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
-
-.form {
-  display: grid; gap: var(--space-4); padding: var(--space-8);
-  background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);
-}
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
-.field { display: grid; gap: var(--space-2); }
-.field label, .field legend { font-size: 14px; line-height: 20px; font-weight: 600; }
-.field input, .field textarea, .field select {
-  width: 100%; font: 400 15px/24px var(--font-sans); color: var(--ink);
-  background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
-  padding: var(--space-3) var(--space-4); min-height: 44px;
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-.field input:hover, .field textarea:hover { border-color: var(--ink-muted); }
-.field textarea { resize: vertical; min-height: 120px; }
-.field input:focus, .field textarea:focus { outline: none; border-color: var(--action); box-shadow: 0 0 0 4px var(--action-soft); }
-.field [aria-invalid="true"] { border-color: var(--danger); }
-.field-error { color: var(--danger); font-size: 13px; line-height: 20px; font-weight: 600; display: none; }
-.field-error.is-visible { display: block; }
-fieldset.field { border: 0; padding: 0; margin: 0; }
-.choice-group { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.choice { position: relative; }
-.field .choice input { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; opacity: 0; pointer-events: none; }
-.choice span {
-  display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer;
-  padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
-  border: 1px solid var(--line-strong); font-size: 13px; line-height: 20px; font-weight: 600;
-  transition: background-color .2s ease, border-color .2s ease, transform .2s var(--ease-out);
-}
-.choice span:hover { border-color: var(--ink); }
-.choice span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--_dot); transition: transform .35s var(--ease-spring); }
-.choice input:checked + span::before { transform: scale(1.5); }
-.choice input:active + span, .choice span:active { transform: scale(.96); }
-.choice input:checked + span { background: var(--_soft); border-color: var(--ink); }
-.choice input:focus-visible + span { outline: 3px solid var(--action); outline-offset: 2px; }
-.form-status { font-size: 14px; line-height: 20px; font-weight: 600; min-height: 20px; }
-.form-status.is-success { color: var(--success); animation: rise .5s var(--ease-out); }
-.form-status.is-error { color: var(--danger); animation: rise .5s var(--ease-out); }
-@media (max-width: 880px) { .contact { grid-template-columns: 1fr; } }
-@media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } .form { padding: var(--space-6); } }
 
 /* ---------- Rodapé ---------- */
 .site-footer { border-top: 1px solid var(--line); background: var(--surface); color: var(--ink); padding-block: var(--space-16) var(--space-8); }
@@ -481,6 +426,18 @@ fieldset.field { border: 0; padding: 0; margin: 0; }
               transform .35s var(--ease-out), border-color .25s ease, box-shadow .35s var(--ease-out);
 }
 .reveal.is-visible, .no-js .reveal { opacity: 1; translate: none; }
+
+/* ---------- Cenas: cada secção anima ao entrar e cede o lugar à seguinte ---------- */
+/* Títulos palavra a palavra, a subir por detrás de uma máscara */
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.split .w > span {
+  display: inline-block; translate: 0 105%;
+  transition: translate .95s var(--ease-out) calc(var(--delay, 0s) + var(--wi, 0) * 45ms);
+}
+.is-visible .split .w > span, .split.is-visible .w > span { translate: none; }
+/* Secções creme: começam como um cartão arredondado e abrem até à largura total */
+.scene-js .section--sunken { clip-path: inset(0 var(--inset, 0px) round var(--round, 0px)); }
+.scene-js .band { scale: var(--grow, 1); }
 
 /* ---------- 404 ---------- */
 .notfound { min-height: calc(100vh - 72px); display: grid; align-items: center; padding-block: var(--space-12); }
