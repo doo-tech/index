@@ -265,34 +265,19 @@ p { margin: 0; }
 @media (max-width: 600px)  { .fronts { grid-template-columns: 1fr; } }
 
 /* ---------- Manifesto / numa só casa ---------- */
-.house { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); align-items: center; }
-.house-points { display: grid; gap: var(--space-6); margin-top: var(--space-8); }
-.house-point { display: grid; grid-template-columns: 24px 1fr; gap: var(--space-4); align-items: start; }
-.house-mark { width: 20px; height: 20px; margin-top: 3px; border-radius: 50%; border: 5px solid var(--_dot); }
-.house-point p { color: var(--ink-muted); margin-top: var(--space-1); }
-.house-visual {
-  position: relative; border-radius: var(--radius-lg); background: var(--surface-raised);
-  border: 1px solid var(--line); padding: var(--space-8); aspect-ratio: 5 / 4;
-  display: grid; place-items: center; overflow: hidden;
+.why-head {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8) var(--space-12); align-items: end;
+  margin-bottom: var(--space-12);
 }
-.orbit { position: relative; width: min(100%, 380px); aspect-ratio: 1; }
-.orbit .core {
-  position: absolute; inset: 33%; display: grid; place-items: center;
-  border-radius: 50%; background: var(--doo-blue);
+.why-head > div { display: grid; gap: var(--space-4); }
+.why-head .body-l { color: var(--ink-muted); max-width: 520px; }
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+.why-item { display: grid; gap: var(--space-3); align-content: start; padding-top: var(--space-6); border-top: 3px solid var(--_dot); }
+.why-item p { color: var(--ink-muted); }
+@media (max-width: 880px) {
+  .why-head { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; gap: var(--space-6); }
 }
-.orbit .core img { width: 42%; }
-.orbit .sat {
-  position: absolute; width: 34%; aspect-ratio: 1; border-radius: 50%;
-  display: grid; place-items: center; text-align: center; padding: var(--space-2);
-  background: var(--_soft); font-size: 13px; line-height: 16px; font-weight: 700; color: var(--ink);
-  border: 6px solid var(--surface-raised);
-}
-.orbit .sat:nth-of-type(1) { top: 0; left: 33%; }
-.orbit .sat:nth-of-type(2) { top: 33%; right: 0; }
-.orbit .sat:nth-of-type(3) { bottom: 0; left: 33%; }
-.orbit .sat:nth-of-type(4) { top: 33%; left: 0; }
-.orbit svg.links { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-strong); }
-@media (max-width: 880px) { .house { grid-template-columns: 1fr; } }
 
 /* ---------- Como trabalhamos ---------- */
 .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); list-style: none; margin: 0; padding: 0; position: relative; }
