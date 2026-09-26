@@ -212,15 +212,10 @@ p { margin: 0; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
 .hero-art { position: relative; aspect-ratio: 1 / 1; max-width: 520px; width: 100%; justify-self: end; }
-.hero-art .logo-main {
-  position: absolute; inset: 22% 4% auto 4%; width: 92%;
-  aspect-ratio: 158 / 85; background: var(--logo) center / contain no-repeat;
+.hero-art .isotipo {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  height: 68%; width: auto; max-width: none;
 }
-.hero-art .signature {
-  position: absolute; right: 12%; top: 73%;
-  font-weight: 500; font-size: clamp(16px, 2vw, 22px); letter-spacing: .04em; color: var(--ink);
-}
-.hero-art .signature b { font-weight: 800; }
 
 /* Motivo: anéis-bolha — traço ≈ ¼ do diâmetro */
 .ring {
